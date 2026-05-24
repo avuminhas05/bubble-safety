@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Safety | Proactive Personal Safety & Watchdog System</title>
+  <meta name="description" content="A proactive, heartbeat-based personal safety ecosystem with companion verification and real-time guardian monitoring.">
+  <link rel="stylesheet" href="styles.css">
+  <!-- FontAwesome Icons for modern aesthetic -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="logo-container">
+      <div class="logo-bubble">
+        <i class="fa-solid fa-shield-halved" style="color: #fff; font-size: 1.1rem; z-index: 2;"></i>
+      </div>
+      <div>
+        <h1 class="logo-title">Bubble</h1>
+        <span class="tagline">Personal Safety Sphere</span>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="badge-live" id="syncBadge">Telemetry Link: Active</div>
+    </div>
+  </header>
+
+  <!-- SIMULATOR WORKSPACE -->
+  <main class="simulator-wrapper">
+
+    <!-- LEFT COLUMN: PHONE INTERACTIVE PORTAL -->
+    <section class="phone-column" aria-label="Smartphone Device View">
+      <div class="phone-device state-safe" id="phoneDevice">
+        
+        <!-- Dynamic Island -->
+        <div class="dynamic-island" id="dynamicIsland">
+          <div class="dynamic-island-camera"></div>
+          <div class="dynamic-island-status" id="islandStatus">Safety Bubble Active</div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="phone-status-bar">
+          <span id="phoneTime">12:00</span>
+          <div class="status-bar-icons">
+            <i class="fa-solid fa-signal"></i>
+            <span style="font-size: 0.65rem;">5G</span>
+            <i class="fa-solid fa-battery-three-quarters" id="batteryIcon"></i>
+          </div>
+        </div>
+
+        <!-- Phone Screen -->
+        <div class="phone-screen">
+          
+          <!-- TAB 1: BUBBLE CONTROLS -->
+          <div class="phone-tab-content" id="tab-bubble">
+            <!-- Slider Card -->
+            <article class="glass-card" id="sliderCard">
+              <div class="glass-card-header">
+                <h2 class="glass-card-title">
+                  <i class="fa-solid fa-face-smile" id="comfortIcon" style="color: var(--safe);"></i>
+                  Safety Comfort
+                </h2>
+                <span class="glass-card-subtitle" id="comfortStatus">Safe</span>
+              </div>
+              <div class="slider-container">
+                <div class="slider-val-display" id="safetyLevelPct" style="color: var(--safe);">100%</div>
+                <div class="slider-desc-display" id="safetyLevelDesc">You feel completely secure and relaxed.</div>
+                <input type="range" min="0" max="100" value="100" class="safety-range-input" id="safetySlider" aria-label="Safety comfort scale">
+              </div>
+            </article>
+
+            <!-- Watchdog Switch Timer Card -->
+            <article class="glass-card">
+              <div class="glass-card-header">
+                <h2 class="glass-card-title">
+                  <i class="fa-solid fa-stopwatch" style="color: var(--primary);"></i>
+                  Watchdog Timer
+                </h2>
+                <span class="glass-card-subtitle" id="watchdogStateLabel">Heartbeat Off</span>
+              </div>
+              <div class="watchdog-container">
+                
+                <!-- Dynamic Timer Face & Adjuster Buttons -->
+                <div class="watchdog-face-row">
+                  <button class="btn-adjust" id="adjustTimerMinus" title="Subtract 1 Minute" aria-label="Subtract 1 Minute">
+                    <i class="fa-solid fa-circle-minus"></i>
+                  </button>
+                  <div class="watchdog-face">
+                    <svg class="watchdog-ring-svg">
+                      <circle class="watchdog-ring-circle" id="timerProgressCircle" cx="70" cy="70" r="66"></circle>
+                    </svg>
+                    <span class="watchdog-timer-digits" id="timerDigits">00:15</span>
+                    <span class="watchdog-label" id="watchdogSubLabel">Pulse Sleep</span>
+                  </div>
+                  <button class="btn-adjust" id="adjustTimerPlus" title="Add 1 Minute" aria-label="Add 1 Minute">
+                    <i class="fa-solid fa-circle-plus"></i>
+                  </button>
+                </div>
+
+                <!-- Modern Preset Pills Row -->
+                <div class="timer-preset-row" id="timerPresets">
+                  <button class="btn-preset active" data-seconds="15">15s</button>
+                  <button class="btn-preset" data-seconds="60">1m</button>
+                  <button class="btn-preset" data-seconds="300">5m</button>
+                  <button class="btn-preset" data-seconds="900">15m</button>
+                </div>
+
+                <!-- Timer setup controls -->
+                <div class="watchdog-controls" id="timerControls">
+                  <button class="btn-bubble" id="startTimerBtn" style="width: 100%;">
+                    <i class="fa-solid fa-play"></i> Start Safety Bubble
+                  </button>
+                </div>
+                
+                <!-- Active Timer controls (Disarm / Extend) -->
+                <div class="watchdog-controls" id="timerActiveControls" style="display: none; width: 100%;">
+                  <button class="btn-bubble btn-outline" style="flex: 1;" id="extendTimerBtn">
+                    <i class="fa-solid fa-rotate-right"></i> Add 1m
+                  </button>
+                  <button class="btn-bubble btn-bubble-warning" id="disarmTimerBtn" style="flex: 1.2;">
+                    <i class="fa-solid fa-lock-open"></i> Safe Check-In
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- TAB 2: COMPANION CHECK -->
+          <div class="phone-tab-content" id="tab-verify" style="display: none;">
+            <article class="glass-card" style="margin-bottom: 0;">
+              <div class="glass-card-header">
+                <h2 class="glass-card-title">
+                  <i class="fa-solid fa-user-shield" style="color: var(--secondary);"></i>
+                  Companion Check
+                </h2>
+                <span class="glass-card-subtitle">Verify Meetups</span>
+              </div>
+              <p style="font-size: 0.72rem; margin-bottom: 0.5rem;">Check driver licenses, plates, or stranger ratings instantly before meetups.</p>
+              
+              <div class="companion-search-group">
+                <input type="text" placeholder="Enter Plate, ID or Name..." class="companion-input" id="companionQueryInput">
+                <button class="btn-bubble btn-icon-only" id="companionSearchBtn" aria-label="Search companion database">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </div>
+
+              <!-- Quick Hints in search to make it extremely easy to use -->
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.75rem; display: flex; gap: 0.4rem; align-items: center;">
+                <span>Try presets:</span>
+                <span onclick="searchHint('CAB-4452')" style="color: var(--secondary); text-decoration: underline; cursor: pointer; font-weight: 600;">CAB-4452</span>
+                <span style="color: rgba(255,255,255,0.15)">|</span>
+                <span onclick="searchHint('JOHN DOE')" style="color: var(--danger); text-decoration: underline; cursor: pointer; font-weight: 600;">JOHN DOE</span>
+              </div>
+
+              <!-- Dynamic Result Card -->
+              <div class="companion-result-card" id="companionResultBox" style="display: block;">
+                <div class="result-card-header">
+                  <span class="companion-name" id="compName">Search Database above</span>
+                  <span class="companion-badge badge-verified" id="compBadge" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-light);">PENDING</span>
+                </div>
+                <div class="companion-rating-row">
+                  <span class="rating-stars" id="compStars">
+                    <i class="fa-regular fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                  </span>
+                  <span style="color: var(--text-muted); font-weight: 700;" id="compRatingScore">0.0/5</span>
+                </div>
+                <div class="companion-feedback" id="compFeedback">
+                  "Enter taxi tags or stranger names to parse crowd-sourced security footprint reviews."
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- TAB 3: AUDIO EAR & HOTLINES -->
+          <div class="phone-tab-content" id="tab-audio" style="display: none;">
+            <!-- Ambient Threat Listener Card -->
+            <article class="glass-card">
+              <div class="glass-card-header">
+                <h2 class="glass-card-title">
+                  <i class="fa-solid fa-microphone" id="micIcon" style="color: var(--text-muted);"></i>
+                  Ambient Listener
+                </h2>
+                <button class="btn-bubble btn-outline btn-icon-only" id="micToggleBtn" style="padding: 0.2rem; width: 30px; height: 30px;" title="Connect Microphone">
+                  <i class="fa-solid fa-microphone-slash"></i>
+                </button>
+              </div>
+              <p style="font-size: 0.72rem; margin-bottom: 0.5rem;" id="micStatusText">Continuous ambient listening is asleep. Enable mic to detect voice distress triggers like "Help" or "Stop".</p>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-bubble btn-outline" style="font-size: 0.75rem; padding: 0.4rem 0.6rem; flex: 1;" id="simVoiceTriggerBtn">
+                  <i class="fa-solid fa-bullhorn"></i> Sim Voice Panic
+                </button>
+              </div>
+            </article>
+
+            <!-- One-Touch Panic Hub Card -->
+            <article class="glass-card" style="margin-bottom: 0;">
+              <div class="glass-card-header" style="margin-bottom: 0.5rem;">
+                <h2 class="glass-card-title">
+                  <i class="fa-solid fa-phone" style="color: var(--danger);"></i>
+                  Emergency Hotline Deck
+                </h2>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                <button class="btn-bubble btn-bubble-danger" style="font-size: 0.75rem; padding: 0.5rem;" onclick="simulateEmergencyDial('Police')">
+                  <i class="fa-solid fa-building-shield"></i> Call Police
+                </button>
+                <button class="btn-bubble btn-bubble-danger" style="font-size: 0.75rem; padding: 0.5rem;" onclick="simulateEmergencyDial('Women Support Line')">
+                  <i class="fa-solid fa-person-dress"></i> Support Line
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Bottom Tab Navigation Bar (Fixed within screen container) -->
+          <nav class="phone-tab-bar">
+            <button class="tab-btn active" id="btnTabBubble">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>Bubble</span>
+            </button>
+            <button class="tab-btn" id="btnTabVerify">
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Verify</span>
+            </button>
+            <button class="tab-btn" id="btnTabAudio">
+              <i class="fa-solid fa-microphone"></i>
+              <span>Safety Ear</span>
+            </button>
+          </nav>
+
+          <!-- Footer brand spacer -->
+          <div class="phone-footer-brand" style="margin-top: 1rem; margin-bottom: 3.5rem;">
+            <h4>BUBBLE APP v2.1.0</h4>
+            <div class="phone-home-indicator" style="margin-top: 0.5rem;"></div>
+          </div>
+
+        </div> <!-- End Phone Screen -->
+
+        <!-- PASSCODE ENTRY DIALOG LOCKSCREEN OVERLAY -->
+        <div class="passcode-overlay" id="passcodeOverlay">
+          <div class="passcode-overlay-title" id="passcodePromptText">DISARM SAFETY BUBBLE</div>
+          <div class="passcode-overlay-desc">Please enter your 4-digit safety passcode. <br><strong>Default Code: 1234</strong></div>
+          <div class="passcode-dots">
+            <div class="passcode-dot" id="dot1"></div>
+            <div class="passcode-dot" id="dot2"></div>
+            <div class="passcode-dot" id="dot3"></div>
+            <div class="passcode-dot" id="dot4"></div>
+          </div>
+          <div class="passcode-keypad">
+            <button class="keypad-btn" onclick="pressKey(1)">1</button>
+            <button class="keypad-btn" onclick="pressKey(2)">2</button>
+            <button class="keypad-btn" onclick="pressKey(3)">3</button>
+            <button class="keypad-btn" onclick="pressKey(4)">4</button>
+            <button class="keypad-btn" onclick="pressKey(5)">5</button>
+            <button class="keypad-btn" onclick="pressKey(6)">6</button>
+            <button class="keypad-btn" onclick="pressKey(7)">7</button>
+            <button class="keypad-btn" onclick="pressKey(8)">8</button>
+            <button class="keypad-btn" onclick="pressKey(9)">9</button>
+            <button class="keypad-btn keypad-btn-clear" onclick="clearKeys()">Clear</button>
+            <button class="keypad-btn" onclick="pressKey(0)">0</button>
+            <button class="keypad-btn keypad-btn-clear" onclick="pressBackspace()"><i class="fa-solid fa-backspace"></i></button>
+          </div>
+        </div>
+
+      </div> <!-- End Phone Device -->
+    </section>
+
+    <!-- RIGHT COLUMN: GUARDIAN DESKTOP HUD & WATCHDOG COMMAND -->
+    <section class="dashboard-column" aria-label="Guardian Command Desk">
+      
+      <!-- Panel 1: Live Interactive GPS Tracking Map -->
+      <article class="hud-panel">
+        <div class="hud-panel-title-row">
+          <h2 class="hud-panel-title">
+            <i class="fa-solid fa-map-location-dot" style="color: var(--secondary);"></i>
+            Guardian Watchdog Portal
+          </h2>
+          <span class="badge-live" id="mapStatusBadge" style="background: rgba(16, 185, 129, 0.15); border-color: var(--safe); color: var(--safe);">
+            Live Tracking
+          </span>
+        </div>
+
+        <div class="map-widget-container">
+          
+          <!-- The Dynamic Animated Canvas Map -->
+          <div class="map-wrapper">
+            <canvas id="mapCanvas" class="canvas-map"></canvas>
+            <div class="map-overlay-hud" id="coordinatesText">GPS: 37.7749° N, 122.4194° W | SPD: 3.2 km/h</div>
+          </div>
+
+          <!-- Watchdog Safety Escort Card -->
+          <div class="guardian-sidebar">
+            <div class="widget-card">
+              <h3 class="widget-card-title">
+                <i class="fa-solid fa-user-lock" style="color: var(--primary);"></i>
+                Safety Escort Status
+              </h3>
+              <div class="escort-hire-box" id="escortBox">
+                <p style="font-size: 0.72rem; margin-bottom: 0.5rem;">Hire a professional safety operator to watch your telemetry line and dispatch emergency lines.</p>
+                <button class="btn-bubble btn-bubble-warning" style="width: 100%; font-size: 0.78rem;" id="hireEscortBtn">
+                  <i class="fa-solid fa-shield-cat"></i> Hire Virtual Escort
+                </button>
+              </div>
+              <div class="escort-profile" id="escortProfileActive" style="display: none;">
+                <div class="escort-avatar">
+                  <i class="fa-solid fa-user-astronaut" style="color: #fff; font-size: 1.3rem;"></i>
+                </div>
+                <div class="escort-info">
+                  <span class="escort-name">Officer Vance (Badge #774)</span>
+                  <div class="escort-status">Active Monitoring</div>
+                </div>
+                <button class="btn-bubble btn-bubble-danger btn-icon-only" style="padding: 0.2rem; width: 30px; height: 30px;" id="cancelEscortBtn" title="Discharge Escort">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Emergency Telemetry HUD Info -->
+            <div class="widget-card">
+              <h3 class="widget-card-title">
+                <i class="fa-solid fa-wave-square" style="color: var(--secondary);"></i>
+                Active Signals
+              </h3>
+              <ul style="list-style: none; font-size: 0.72rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Watchdog Switch:</span>
+                  <span id="telemetryWatchdog">Asleep</span>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Risk Threshold:</span>
+                  <span id="telemetryRisk" style="color: var(--safe); font-weight: 700;">Minimal Risk</span>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">GPS Heartbeat:</span>
+                  <span id="telemetryGPS">1.0s / Green</span>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Audio Stream:</span>
+                  <span id="telemetryAudio">Off (Standby)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div> <!-- End Map Grid Container -->
+
+        <!-- FULL-SCREEN SOS PANIC OVERLAY FOR THE PORTAL -->
+        <div class="panic-overlay" id="panicOverlay">
+          <h3 class="panic-title"><i class="fa-solid fa-triangle-exclamation"></i> EMERGENCY WATCHDOG ALERT <i class="fa-solid fa-triangle-exclamation"></i></h3>
+          <p class="panic-desc" id="panicDetailsText">
+            Bubble user is unresponsive! The Watchdog countdown was breached. User's last known location and buffered ambient sound feeds are broadcasting.
+          </p>
+          <div class="panic-button-row">
+            <button class="btn-bubble" style="background: #fff; color: var(--danger); box-shadow: none;" id="overrideSirenBtn">
+              <i class="fa-solid fa-volume-xmark"></i> Silence Siren
+            </button>
+            <button class="btn-bubble btn-bubble-danger" id="dispatchPoliceBtn" style="border: 2px solid #fff;">
+              <i class="fa-solid fa-truck-medical"></i> Dispatch Authorities
+            </button>
+            <button class="btn-bubble btn-outline" id="falseAlarmBtn">
+              <i class="fa-solid fa-circle-check"></i> Cancel Alert
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Panel 2: Bottom Grid - Ambient Audio Visualizer + Activity Logs -->
+      <div class="hud-bottom-grid">
+        
+        <!-- Live Audio Streaming Widget -->
+        <article class="hud-panel">
+          <div class="hud-panel-title-row">
+            <h2 class="hud-panel-title">
+              <i class="fa-solid fa-microphone-lines" style="color: var(--primary);"></i>
+              Live Ambient Audio Stream
+            </h2>
+            <span class="badge-live" id="audioStreamBadge" style="background: rgba(255, 255, 255, 0.05); border-color: var(--border-light); color: var(--text-muted); animation: none;">
+              Standby
+            </span>
+          </div>
+          <div class="audio-visualizer-container">
+            <div class="audio-bars-wrapper" id="audioBars">
+              <!-- Dynamically generated bars for satisfying visualization -->
+              <div class="audio-bar" style="height: 10%"></div>
+              <div class="audio-bar" style="height: 15%"></div>
+              <div class="audio-bar" style="height: 8%"></div>
+              <div class="audio-bar" style="height: 25%"></div>
+              <div class="audio-bar" style="height: 12%"></div>
+              <div class="audio-bar" style="height: 35%"></div>
+              <div class="audio-bar" style="height: 18%"></div>
+              <div class="audio-bar" style="height: 45%"></div>
+              <div class="audio-bar" style="height: 20%"></div>
+              <div class="audio-bar" style="height: 60%"></div>
+              <div class="audio-bar" style="height: 25%"></div>
+              <div class="audio-bar" style="height: 40%"></div>
+              <div class="audio-bar" style="height: 15%"></div>
+              <div class="audio-bar" style="height: 10%"></div>
+            </div>
+            <div class="audio-visualizer-label" id="audioVisualizerText">BUFFERING SLEEP</div>
+          </div>
+        </article>
+
+        <!-- Dynamic Event Console Log -->
+        <article class="hud-panel">
+          <div class="hud-panel-title-row">
+            <h2 class="hud-panel-title">
+              <i class="fa-solid fa-terminal" style="color: var(--secondary);"></i>
+              System Event Logs
+            </h2>
+            <button class="btn-bubble btn-outline" style="font-size: 0.65rem; padding: 0.25rem 0.5rem;" id="clearLogsBtn">
+              Clear Console
+            </button>
+          </div>
+          <div class="logs-console" id="logsConsole" aria-live="polite">
+            <!-- Simulated logs print here -->
+          </div>
+        </article>
+
+      </div> <!-- End Bottom HUD Grid -->
+
+    </section>
+  </main>
+
+  <!-- QUICK SIMULATION ASSISTANCE CONTROL DECK (Helper for demonstration) -->
+  <footer class="sim-controls-panel">
+    <div class="sim-control-item">
+      <span class="sim-control-label">Simulation Assist Deck:</span>
+    </div>
+    <button class="btn-bubble btn-outline" style="font-size: 0.72rem; padding: 0.4rem 0.75rem;" id="simDeviateBtn">
+      <i class="fa-solid fa-route" style="color: var(--warning);"></i> Walk Off-Route
+    </button>
+    <button class="btn-bubble btn-outline" style="font-size: 0.72rem; padding: 0.4rem 0.75rem;" id="simLowBatteryBtn">
+      <i class="fa-solid fa-battery-quarter" style="color: var(--warning);"></i> Drop Battery to 3%
+    </button>
+    <button class="btn-bubble btn-outline" style="font-size: 0.72rem; padding: 0.4rem 0.75rem;" id="simSirenBtn">
+      <i class="fa-solid fa-bell" style="color: var(--danger);"></i> Test Audible Siren
+    </button>
+    <button class="btn-bubble btn-outline" style="font-size: 0.72rem; padding: 0.4rem 0.75rem;" id="resetSimBtn">
+      <i class="fa-solid fa-arrow-rotate-left"></i> Full Reset
+    </button>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
